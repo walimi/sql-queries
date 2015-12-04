@@ -1,7 +1,21 @@
 select
 	a.LeadID,
-	c.Status
+	c.Status,
+	b.DateCreated
 from Lead a
-join LeadStatusChange b on a.LeadID = b.LeadID
-join LeadStatusLU c on b.LeadStatusID = c.LeadStatusID
-where a.LeadID = 1994566
+left join LeadStatusChange b on a.LeadID = b.LeadID
+left join LeadStatusLU c on b.LeadStatusID = c.LeadStatusID
+where c.Status is not null
+and a.LeadID in (
+	select LeadID
+	from LeadStatusChange 
+	where DateCreated > '2015-11-01'
+	group by LeadID
+	having count(LeadID) >= 1
+	)
+group by a.LeadID, c.Status, b.DateCreated
+order by DateCreated
+
+
+select * from LeadStatusChange
+where LeadId=626393
