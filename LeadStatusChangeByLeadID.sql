@@ -1,7 +1,8 @@
 select
 	a.LeadID,
 	c.Status,
-	b.DateCreated
+	b.DateCreated,
+	b.LeadStatusID
 from Lead a
 left join LeadStatusChange b on a.LeadID = b.LeadID
 left join LeadStatusLU c on b.LeadStatusID = c.LeadStatusID
@@ -13,9 +14,8 @@ and a.LeadID in (
 	group by LeadID
 	having count(LeadID) > 1
 	)
-group by a.LeadID, c.Status, b.DateCreated
+and a.LeadID=1931033
+group by a.LeadID, c.Status, b.DateCreated, b.LeadStatusID
 order by LeadID, DateCreated
 
 
-select * from LeadStatusChange
-where LeadId=626393
